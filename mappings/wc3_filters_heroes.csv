@@ -1,0 +1,25 @@
+﻿Race;Name;Type;Mapping;String_Winner;String_Loser
+Human;Archmage;1. Hero;Hamg;players_winner_heroes_0_id_Hamg;players_loser_heroes_0_id_Hamg
+Human;Mountain King;1. Hero;Hmkg;players_winner_heroes_0_id_Hmkg;players_loser_heroes_0_id_Hmkg
+Human;Paladin;1. Hero;Hpal;players_winner_heroes_0_id_Hpal;players_loser_heroes_0_id_Hpal
+Human;Blood Mage;1. Hero;Hblm;players_winner_heroes_0_id_Hblm;players_loser_heroes_0_id_Hblm
+Undead;Death Knight;1. Hero;Udea;players_winner_heroes_0_id_Udea;players_loser_heroes_0_id_Udea
+Undead;Dreadlord;1. Hero;Udre;players_winner_heroes_0_id_Udre;players_loser_heroes_0_id_Udre
+Undead;Lich;1. Hero;Udlic;players_winner_heroes_0_id_Udlic;players_loser_heroes_0_id_Udlic
+Undead;Cryptlord;1. Hero;Ucrl;players_winner_heroes_0_id_Ucrl;players_loser_heroes_0_id_Ucrl
+Night Elf;Demonhunter;1. Hero;Edem;players_winner_heroes_0_id_Edem;players_loser_heroes_0_id_Edem
+Night Elf;Keeper of the Grove;1. Hero;Ekee;players_winner_heroes_0_id_Ekee;players_loser_heroes_0_id_Ekee
+Night Elf;Priestress of the moon;1. Hero;Emoo;players_winner_heroes_0_id_Emoo;players_loser_heroes_0_id_Emoo
+Night Elf;Warden;1. Hero;Ewar;players_winner_heroes_0_id_Ewar;players_loser_heroes_0_id_Ewar
+Neutral;Panda;1. Hero;Npbm;players_winner_heroes_0_id_Npbm;players_loser_heroes_0_id_Npbm
+Neutral;Darkranger;1. Hero;Nbrn;players_winner_heroes_0_id_Nbrn;players_loser_heroes_0_id_Nbrn
+Neutral;Naga Seawitch;1. Hero;Nngs;players_winner_heroes_0_id_Nngs;players_loser_heroes_0_id_Nngs
+Neutral;Pitlord;1. Hero;Nplh;players_winner_heroes_0_id_Nplh;players_loser_heroes_0_id_Nplh
+Neutral;Beastmaster;1. Hero;Nbst;players_winner_heroes_0_id_Nbst;players_loser_heroes_0_id_Nbst
+Neutral;Tinker;1. Hero;Ntin;players_winner_heroes_0_id_Ntin;players_loser_heroes_0_id_Ntin
+Neutral;Firelord;1. Hero;Nfir;players_winner_heroes_0_id_Nfir;players_loser_heroes_0_id_Nfir
+Neutral;Alchemist;1. Hero;Nalc;players_winner_heroes_0_id_Nalc;players_loser_heroes_0_id_Nalc
+Orc;Blade Master;1. Hero;Obla;players_winner_heroes_0_id_Obla;players_loser_heroes_0_id_Obla
+Orc;Farseer;1. Hero;Ofar;players_winner_heroes_0_id_Ofar;players_loser_heroes_0_id_Ofar
+Orc;Tauren Chieftan;1. Hero;Otch;players_winner_heroes_0_id_Otch;players_loser_heroes_0_id_Otch
+Orc;Shadow Hunter;1. Hero;Oshd;players_winner_heroes_0_id_Oshd;players_loser_heroes_0_id_Oshd
