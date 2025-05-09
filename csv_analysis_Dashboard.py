@@ -240,22 +240,13 @@ def calculate_total_lumber_all(df):
     return df
 
 # Function to calculate average and standard deviation for a column with optional filtering
-def calculate_avg_std(df, column, duration_range=None, winner_hunts=None, loser_hunts=None, general_hunts=None):
+def calculate_avg_std(df, column, duration_range=None):
     # Apply filtering based on provided filters
     filtered_df = df.copy()
     if duration_range:
         lower, upper = duration_range
         if lower is not None and upper is not None: # Ensure both bounds are provided
             filtered_df = filtered_df[(filtered_df['duration'] >= lower) & (filtered_df['duration'] <= upper)]
-    if winner_hunts is not None:
-        filtered_df = filtered_df[filtered_df['players_winner_units_summary_esen'] >= winner_hunts]
-    if loser_hunts is not None:
-        filtered_df = filtered_df[filtered_df['players_loser_units_summary_esen'] >= loser_hunts]
-    if general_hunts is not None:
-        filtered_df = filtered_df[
-            (filtered_df['players_winner_units_summary_esen'] >= general_hunts) |
-            (filtered_df['players_loser_units_summary_esen'] >= general_hunts)
-        ]
 
     avg = filtered_df[column].mean()
     std_dev = filtered_df[column].std()
@@ -264,21 +255,12 @@ def calculate_avg_std(df, column, duration_range=None, winner_hunts=None, loser_
     return avg, std_dev, count
 
 # Function to calculate win percentage and total games for the selected matchup
-def calculate_win_percentage(df, winner_race, loser_race, duration_range=None, winner_hunts=None, loser_hunts=None, general_hunts=None):
+def calculate_win_percentage(df, winner_race, loser_race, duration_range=None):
     filtered_df = df.copy()
     if duration_range:
         lower, upper = duration_range
         if lower is not None and upper is not None: # Ensure both bounds are provided
             filtered_df = filtered_df[(filtered_df['duration'] >= lower) & (filtered_df['duration'] <= upper)]
-    if winner_hunts is not None:
-        filtered_df = filtered_df[filtered_df['players_winner_units_summary_esen'] >= winner_hunts]
-    if loser_hunts is not None:
-        filtered_df = filtered_df[filtered_df['players_loser_units_summary_esen'] >= loser_hunts]
-    if general_hunts is not None:
-        filtered_df = filtered_df[
-            (filtered_df['players_winner_units_summary_esen'] >= general_hunts) |
-            (filtered_df['players_loser_units_summary_esen'] >= general_hunts)
-        ]
 
     if winner_race and loser_race:
         win_count = filtered_df[
@@ -336,7 +318,11 @@ def create_dash_app(flask_server, url_base_pathname):
 
     # Define the app layout
     dash_app.layout = html.Div([
-        html.H1("Replay Data Average & Standard Deviation Summary"),
+        html.Div(
+            dcc.Link(html.Button("Back to Main"), href='/', refresh=True),
+            style={'marginBottom': '20px', 'textAlign': 'left'}  # Added textAlign for better alignment
+        ),
+        html.H1("Replay Data - Graphical Dashboards"),
         html.Div([
             html.Label('Filter by Winner Race:'),
             dcc.Dropdown(
@@ -371,26 +357,6 @@ def create_dash_app(flask_server, url_base_pathname):
                 ),
             ]),
             html.Br(),
-            html.Label('Filter by Winner Hunts:'),
-            dcc.Input(
-                id='winner-hunts-input',
-                type='number',
-                placeholder='Minimum Winner Hunts'
-            ),
-            html.Br(),
-            html.Label('Filter by Loser Hunts:'),
-            dcc.Input(
-                id='loser-hunts-input',
-                type='number',
-                placeholder='Minimum Loser Hunts'
-            ),
-            html.Br(),
-            html.Label('Filter by General Hunts:'),
-            dcc.Input(
-                id='general-hunts-input',
-                type='number',
-                placeholder='Minimum General Hunts'
-            ),
         ], style={'width': '48%', 'display': 'inline-block', 'verticalAlign': 'top', 'padding': '20px'}),
         html.Div([
             dash_table.DataTable(
@@ -467,14 +433,11 @@ def create_dash_app(flask_server, url_base_pathname):
         [Input('avg-std-winner-race-dropdown', 'value'),
          Input('avg-std-loser-race-dropdown', 'value'),
          Input('duration-lower-input', 'value'),
-         Input('duration-upper-input', 'value'),
-         Input('winner-hunts-input', 'value'),
-         Input('loser-hunts-input', 'value'),
-         Input('general-hunts-input', 'value')]
+         Input('duration-upper-input', 'value')]
     )
-    def update_avg_std_table(winner_race, loser_race, duration_lower, duration_upper, winner_hunts, loser_hunts, general_hunts):
+    def update_avg_std_table(winner_race, loser_race, duration_lower, duration_upper):
         logging.info("Callback triggered with filters:")
-        logging.info(f"Winner Race: {winner_race}, Loser Race: {loser_race}, Duration: ({duration_lower}, {duration_upper}), Winner Hunts: {winner_hunts}, Loser Hunts: {loser_hunts}, General Hunts: {general_hunts}")
+        logging.info(f"Winner Race: {winner_race}, Loser Race: {loser_race}, Duration: ({duration_lower}, {duration_upper})")
 
         # Start with the globally loaded DataFrame copy for filtering
         filtered_df = df.copy()
@@ -501,17 +464,6 @@ def create_dash_app(flask_server, url_base_pathname):
         elif duration_upper is not None:
              filtered_df = filtered_df[filtered_df['duration'] <= duration_upper]
              # duration_range = (0, duration_upper) # Or handle differently
-
-        # Apply Hunts filters
-        if winner_hunts is not None:
-            filtered_df = filtered_df[filtered_df['players_winner_units_summary_esen'] >= winner_hunts]
-        if loser_hunts is not None:
-            filtered_df = filtered_df[filtered_df['players_loser_units_summary_esen'] >= loser_hunts]
-        if general_hunts is not None:
-            filtered_df = filtered_df[
-                (filtered_df['players_winner_units_summary_esen'] >= general_hunts) |
-                (filtered_df['players_loser_units_summary_esen'] >= general_hunts)
-            ]
 
         logging.info(f"Filtered DataFrame shape: {filtered_df.shape}")
 
@@ -568,10 +520,7 @@ def create_dash_app(flask_server, url_base_pathname):
         for column in columns_to_analyze:
             avg, std_dev, count = calculate_avg_std(
                 filtered_df, column, # Use filtered_df here
-                duration_range=duration_range,
-                winner_hunts=winner_hunts,
-                loser_hunts=loser_hunts,
-                general_hunts=general_hunts
+                duration_range=duration_range
             )
             # Format buildtime/duration columns
             if 'buildtime' in column or 'duration' in column:
@@ -593,8 +542,7 @@ def create_dash_app(flask_server, url_base_pathname):
         win_percentage, total_count = calculate_win_percentage(
             filtered_df, # Use filtered_df to calculate win % based on current view
             winner_race, loser_race,
-            duration_range=duration_range,
-            winner_hunts=winner_hunts, loser_hunts=loser_hunts, general_hunts=general_hunts
+            duration_range=duration_range
         )
 
         # Clarify win percentage display based on selection

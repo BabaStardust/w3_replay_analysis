@@ -42,7 +42,7 @@ NAV_HTML = """
         <h1>Welcome to Warcraft III Replay Analysis</h1>
         <p>Please select a dashboard to view:</p>
         <ul class="tabs">
-            <li><a href="{{ url_for('dash_summary_entry') }}">Summary Dashboard</a></li>
+            <li><a href="{{ url_for('dash_summary_entry') }}">Graphical Dashboards</a></li>
             <li><a href="{{ url_for('dash_filters_entry') }}">Advanced Filters Dashboard</a></li>
         </ul>
     </div>

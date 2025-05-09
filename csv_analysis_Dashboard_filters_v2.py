@@ -46,7 +46,7 @@ if missing_columns:
     raise KeyError(f"Missing required columns in df_filters: {missing_columns}")
 
 df_filters_sorted = df_filters.sort_values(by=['race', 'type', 'name']).reset_index(drop=True)
-logging.info(f"First few rows of df_filters_sorted:\n{df_filters_sorted.head()}")
+# logging.info(f"First few rows of df_filters_sorted:\n{df_filters_sorted.head()}")
 
 # Load 'wc3_filters_heroes.csv'
 try:
@@ -224,6 +224,10 @@ def create_filters_dash_app(flask_server, url_base_pathname):
     # or use the passed df from load_data if it's called within create_filters_dash_app
 
     filters_dash_app.layout = html.Div([
+        html.Div(
+            dcc.Link(html.Button("Back to Main"), href='/', refresh=True),
+            style={'marginBottom': '20px', 'textAlign': 'left'}  # Added textAlign for better alignment
+        ),
         html.H1("Replay Data Analysis with Advanced Filters"), # Modified Title
         html.Div([
             html.H3("Win Percentage and Total Games"),
@@ -716,7 +720,7 @@ def create_filters_dash_app(flask_server, url_base_pathname):
             win_percentage_display = (
                 f"Win Percentage: {win_percent_calc:.2f}% | Total Games: {total_games} | "
                 f"{winner_race or 'N/A'} win count: {DFCount_Winner_Filter}, "
-                f"{loser_race or 'N/A'} as winner (loss for {winner_race or 'N/A'}) count: {DFCount_Loser_Filter}"
+                f"{loser_race or 'N/A'} loss count: {DFCount_Loser_Filter}"
             )
             
         # ================
