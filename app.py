@@ -39,15 +39,16 @@ NAV_HTML = """
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to Warcraft III Replay Analysis</h1>
-        <p>Stats based on warcraft3.info replays 111727 - 117454</p>
+        <h1>Warcraft 3 Replay Analysis Dashboard</h1>
+        <p><em>Stats based on warcraft3.info replays 111727 - 117597</em></p>
         <p>Please select a dashboard to view:</p>
         <ul class="tabs">
             <li><a href="{{ url_for('dash_summary_entry') }}">Graphical Dashboards</a></li>
             <li><a href="{{ url_for('dash_filters_entry') }}">Advanced Filters Dashboard</a></li>
         </ul>
-        <p>This is a private project. Please do not share the link.</p>
-        <p>If you have any questions, please contact me using Discord -> dson_ch</p>
+        <p><strong>Notes:</strong></p>
+        <p>Winrate of "Graphical Dashboards" will always display as 100% and does not include the inverse in the graphics</p>
+        <p>This is a private project. Please do not share the link. If you have any questions, please contact me using Discord -> dson_ch</p>
     </div>
 </body>
 </html>
