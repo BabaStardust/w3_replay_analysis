@@ -40,11 +40,14 @@ NAV_HTML = """
 <body>
     <div class="container">
         <h1>Welcome to Warcraft III Replay Analysis</h1>
+        <p>Stats based on warcraft3.info replays 111727 - 117454</p>
         <p>Please select a dashboard to view:</p>
         <ul class="tabs">
             <li><a href="{{ url_for('dash_summary_entry') }}">Graphical Dashboards</a></li>
             <li><a href="{{ url_for('dash_filters_entry') }}">Advanced Filters Dashboard</a></li>
         </ul>
+        <p>This is a private project. Please do not share the link.</p>
+        <p>If you have any questions, please contact me using Discord -> dson_ch</p>
     </div>
 </body>
 </html>
