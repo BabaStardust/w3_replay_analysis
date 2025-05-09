@@ -556,21 +556,21 @@ def create_filters_dash_app(flask_server, url_base_pathname):
                     df_copy[sl] = pd.to_numeric(df_copy[sl], errors='coerce').fillna(0)
                     mask_table &= ((df_copy[sw] >= filter_value) | (df_copy[sl] >= filter_value))
 
-        selected_winner_heroes = [h for h in [hero_winner_1_mapping, hero_winner_2_mapping, hero_winner_3_mapping] if h]
-        if selected_winner_heroes:
-            mask_table &= (
-                df_copy['players_winner_heroes_0_id'].isin(selected_winner_heroes) |
-                df_copy['players_winner_heroes_1_id'].isin(selected_winner_heroes) |
-                df_copy['players_winner_heroes_2_id'].isin(selected_winner_heroes)
-            )
+        # Apply Winner Hero filters (position-specific)
+        if hero_winner_1_mapping:
+            mask_table &= (df_copy['players_winner_heroes_0_id'] == hero_winner_1_mapping)
+        if hero_winner_2_mapping:
+            mask_table &= (df_copy['players_winner_heroes_1_id'] == hero_winner_2_mapping)
+        if hero_winner_3_mapping:
+            mask_table &= (df_copy['players_winner_heroes_2_id'] == hero_winner_3_mapping)
 
-        selected_loser_heroes = [h for h in [hero_loser_1_mapping, hero_loser_2_mapping, hero_loser_3_mapping] if h]
-        if selected_loser_heroes:
-            mask_table &= (
-                df_copy['players_loser_heroes_0_id'].isin(selected_loser_heroes) |
-                df_copy['players_loser_heroes_1_id'].isin(selected_loser_heroes) |
-                df_copy['players_loser_heroes_2_id'].isin(selected_loser_heroes)
-            )
+        # Apply Loser Hero filters (position-specific)
+        if hero_loser_1_mapping:
+            mask_table &= (df_copy['players_loser_heroes_0_id'] == hero_loser_1_mapping)
+        if hero_loser_2_mapping:
+            mask_table &= (df_copy['players_loser_heroes_1_id'] == hero_loser_2_mapping)
+        if hero_loser_3_mapping:
+            mask_table &= (df_copy['players_loser_heroes_2_id'] == hero_loser_3_mapping)
 
         table_df = df_copy[mask_table]
 
@@ -684,10 +684,22 @@ def create_filters_dash_app(flask_server, url_base_pathname):
                          df_copy[sw] = pd.to_numeric(df_copy[sw], errors='coerce').fillna(0)
                          df_copy[sl] = pd.to_numeric(df_copy[sl], errors='coerce').fillna(0)
                          w_mask &= ((df_copy[sw] >= fv) | (df_copy[sl] >= fv))
-            if selected_winner_heroes:
-                w_mask &= (df_copy['players_winner_heroes_0_id'].isin(selected_winner_heroes) | df_copy['players_winner_heroes_1_id'].isin(selected_winner_heroes) | df_copy['players_winner_heroes_2_id'].isin(selected_winner_heroes))
-            if selected_loser_heroes:
-                w_mask &= (df_copy['players_loser_heroes_0_id'].isin(selected_loser_heroes) | df_copy['players_loser_heroes_1_id'].isin(selected_loser_heroes) | df_copy['players_loser_heroes_2_id'].isin(selected_loser_heroes))
+            
+            # Apply Winner Hero filters (position-specific) for w_mask
+            if hero_winner_1_mapping:
+                w_mask &= (df_copy['players_winner_heroes_0_id'] == hero_winner_1_mapping)
+            if hero_winner_2_mapping:
+                w_mask &= (df_copy['players_winner_heroes_1_id'] == hero_winner_2_mapping)
+            if hero_winner_3_mapping:
+                w_mask &= (df_copy['players_winner_heroes_2_id'] == hero_winner_3_mapping)
+
+            # Apply Loser Hero filters (position-specific) for w_mask
+            if hero_loser_1_mapping:
+                w_mask &= (df_copy['players_loser_heroes_0_id'] == hero_loser_1_mapping)
+            if hero_loser_2_mapping:
+                w_mask &= (df_copy['players_loser_heroes_1_id'] == hero_loser_2_mapping)
+            if hero_loser_3_mapping:
+                w_mask &= (df_copy['players_loser_heroes_2_id'] == hero_loser_3_mapping)
             DFCount_Winner_Filter = df_copy[w_mask].shape[0]
 
             l_mask = (df_copy['players_winner_raceDetected'] == loser_race) & (df_copy['players_loser_raceDetected'] == winner_race)
@@ -702,11 +714,25 @@ def create_filters_dash_app(flask_server, url_base_pathname):
                          df_copy[sw] = pd.to_numeric(df_copy[sw], errors='coerce').fillna(0)
                          df_copy[sl] = pd.to_numeric(df_copy[sl], errors='coerce').fillna(0)
                          l_mask &= ((df_copy[sw] >= fv) | (df_copy[sl] >= fv)) # Applied to the game row
-            # For l_mask, selected_winner_heroes apply to players_loser_heroes columns, and vice-versa
-            if selected_winner_heroes: # These were selected as "winner heroes" in dropdowns
-                l_mask &= (df_copy['players_loser_heroes_0_id'].isin(selected_winner_heroes) | df_copy['players_loser_heroes_1_id'].isin(selected_winner_heroes) | df_copy['players_loser_heroes_2_id'].isin(selected_winner_heroes))
-            if selected_loser_heroes: # These were selected as "loser heroes" in dropdowns
-                l_mask &= (df_copy['players_winner_heroes_0_id'].isin(selected_loser_heroes) | df_copy['players_winner_heroes_1_id'].isin(selected_loser_heroes) | df_copy['players_winner_heroes_2_id'].isin(selected_loser_heroes))
+
+            # For l_mask, hero_winner_X_mapping applies to players_loser_heroes_X_id,
+            # and hero_loser_X_mapping applies to players_winner_heroes_X_id.
+
+            # Apply "Winner Hero" dropdown selections to the game's LOSER heroes (position-specific) for l_mask
+            if hero_winner_1_mapping: # From "1. Hero Winner" dropdown
+                l_mask &= (df_copy['players_loser_heroes_0_id'] == hero_winner_1_mapping)
+            if hero_winner_2_mapping: # From "2. Hero Winner" dropdown
+                l_mask &= (df_copy['players_loser_heroes_1_id'] == hero_winner_2_mapping)
+            if hero_winner_3_mapping: # From "3. Hero Winner" dropdown
+                l_mask &= (df_copy['players_loser_heroes_2_id'] == hero_winner_3_mapping)
+
+            # Apply "Loser Hero" dropdown selections to the game's WINNER heroes (position-specific) for l_mask
+            if hero_loser_1_mapping: # From "1. Hero Loser" dropdown
+                l_mask &= (df_copy['players_winner_heroes_0_id'] == hero_loser_1_mapping)
+            if hero_loser_2_mapping: # From "2. Hero Loser" dropdown
+                l_mask &= (df_copy['players_winner_heroes_1_id'] == hero_loser_2_mapping)
+            if hero_loser_3_mapping: # From "3. Hero Loser" dropdown
+                l_mask &= (df_copy['players_winner_heroes_2_id'] == hero_loser_3_mapping)
             DFCount_Loser_Filter = df_copy[l_mask].shape[0]
 
         # ================
